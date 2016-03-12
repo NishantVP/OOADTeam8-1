@@ -38,6 +38,12 @@ public class Market extends Thread {
         //createStocks(StockType.values());
        // createStockTrendMap();
         //addDummyCurrentValues();
+    	User u1 =  returnUser(new Authentication("surag","surag"));
+    	User u2 =  returnUser(new Authentication("prateek","surag"));
+    	User u3 =  returnUser(new Authentication("nishant","surag"));
+    	addUser(u1);
+    	addUser(u2);
+    	addUser(u3);
         start();
     }
 
@@ -224,7 +230,7 @@ public class Market extends Thread {
             if(update < 0 ) update = 0;
             currentStockValues.put(s.getStockName(), update);
             s.setStockUnitPrice(update);
-            System.out.println(s.getStockName()+" : "+s.getUnitPrice());
+            //System.out.println(s.getStockName()+" : "+s.getUnitPrice());
             cnt++;
         }
 
@@ -303,8 +309,10 @@ public class Market extends Thread {
     }
 
     public void createBuySell(String request)
-    {
+    {	
+    	//System.out.println("Request" +request);
         String[] req = request.split(",");
+        
         BuySell b = new BuySell(req[0],Integer.parseInt(req[1]),req[2],Double.parseDouble(req[3]),Integer.parseInt(req[4]),Boolean.parseBoolean(req[5]));
 //        System.out.println("OBJECT CREATED for BuySELL REQUEST");
 //        System.out.println("Stock Name: "+b.getStockName());

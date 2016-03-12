@@ -95,7 +95,13 @@ public class ReceiveThread implements Runnable {
 					}
 				}
 				else {
-					System.out.println("Message from Client: " +receivedMessage);  
+					System.out.println("Client Data Received : " +receivedMessage);  
+					if(receivedMessage.equals("NothingNew")){
+						//No New Buy Sell Request from this user
+					}
+					else {
+						market.createBuySell(receivedMessage);
+					}
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

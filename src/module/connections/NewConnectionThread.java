@@ -195,7 +195,7 @@ public class NewConnectionThread implements Runnable {
 	private static void saveServerIPToCloud() throws IOException {
 		// set up the command and parameter
 		String Port = Integer.toString(ListenPORT);
-		String pythonScriptPath = "/home/nishant/JavaWorkspace/GitRepos/OOADTeam8-1/OOADTeam8-1/SaveServerIP.py";
+		String pythonScriptPath = "/home/nishant/Documents/OOADTeam8-1/SaveServerIPOOAD.py";
 		String[] cmd = new String[6];
 		cmd[0] = "python"; // check version of installed python: python -V
 		cmd[1] = pythonScriptPath;

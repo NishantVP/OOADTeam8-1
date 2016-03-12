@@ -13,6 +13,7 @@ public class BuySell {
         stockName = sn;
         userId = id;
         userName = un;
+        
         unitPrice = up;
         quantity = qty;
         buySell = bS;

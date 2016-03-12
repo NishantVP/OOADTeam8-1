@@ -77,7 +77,8 @@ public class SendThread implements Runnable {
 		//newData = "This is from SendThread..." + sentMessageCounter;
 		
 		while(true) {		
-			newData = "This is from SendThread..." + sentMessageCounter;
+			//newData = "This is from SendThread..." + sentMessageCounter;
+			newData = market.requestMarketUpdate("nishant");
 			if(newData.equals(NO_NEW_DATA))  {
 				//System.out.println("No updates for this client at this time ..");
 				try {
@@ -89,12 +90,13 @@ public class SendThread implements Runnable {
 		    }
 			
 			else {
+				
 				pWrite.println(newData);             
 				pWrite.flush();
-				System.out.println("Data Sent" +newData);
+				System.out.println("Client Data Sent: " +newData);
 				sentMessageCounter++;
 				try {
-					Thread.sleep(5000);
+					Thread.sleep(1000);
 					
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
@@ -123,6 +125,7 @@ public class SendThread implements Runnable {
 			System.out.println("Send Thread: Before Accept");
 			StoCSocket = StoCServerSocket.accept();
 			System.out.println("Send Thread: After Accept");
+			
 			// sending to client (pwrite object)
             outStream = StoCSocket.getOutputStream(); 
             pWrite = new PrintWriter(outStream, true);

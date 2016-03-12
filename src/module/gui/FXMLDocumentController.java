@@ -42,7 +42,7 @@ public class FXMLDocumentController extends Thread implements Initializable {
             } catch (InterruptedException ex) {
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             }
-            System.out.println("updating market");
+            //System.out.println("updating market");
             updateMarket();
         }
     }
