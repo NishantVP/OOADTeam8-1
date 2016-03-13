@@ -122,9 +122,9 @@ public class SendThread implements Runnable {
 		
 		try {	
 			StoCServerSocket = new ServerSocket(StoCPort);
-			System.out.println("Send Thread: Before Accept");
+			//System.out.println("Send Thread: Before Accept");
 			StoCSocket = StoCServerSocket.accept();
-			System.out.println("Send Thread: After Accept");
+			//System.out.println("Send Thread: After Accept");
 			
 			// sending to client (pwrite object)
             outStream = StoCSocket.getOutputStream(); 

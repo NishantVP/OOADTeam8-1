@@ -4,32 +4,38 @@
  *  Team 8
  */
 package module.gui;
-
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.application.Platform;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 import module.market.Market;
 import module.market.Stock;
 import module.users.Authentication;
 import module.users.User;
 
 /**
- *
  * @author Prateek
  */
 public class FXMLDocumentController extends Thread implements Initializable {
@@ -38,28 +44,31 @@ public class FXMLDocumentController extends Thread implements Initializable {
     public void run() {
         while (true) {
             try {
-                Thread.sleep(5555);
+                Thread.sleep(2222);
             } catch (InterruptedException ex) {
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             }
-            //System.out.println("updating market");
+//            System.out.println("updating market");
+            updateChart();
             updateMarket();
         }
     }
+
+
+    @FXML
+    private Pane chartPane;
+
+    @FXML
+    private static LineChart lineChart;
 
     @FXML
     private TabPane mainTabPane;
 
     @FXML
-    private Tab viewMarketTab;
-
-    @FXML
     private TextField usernameInput;
-    StringProperty usernameInputProp = new SimpleStringProperty();
 
     @FXML
     private TextField passwordInput;
-    StringProperty passwordInputProp = new SimpleStringProperty();
 
     @FXML
     private Label LoginError;
@@ -90,25 +99,99 @@ public class FXMLDocumentController extends Thread implements Initializable {
     @FXML
     private TextField stockPriceField;
 
+    @FXML
+    public Tab indexTab;
+    @FXML
+    public Tab userManagementTab;
+    @FXML
+    public Tab addEditStocksTab;
+    @FXML
+    public Tab marketGraphTab;
+    @FXML
+    public Tab viewMarketTab;
+
+
+    private static List<XYChart.Series> seriesList = new ArrayList<>();
+
+    public static List<XYChart.Series> getSeriesList() {
+        return seriesList;
+    }
+
+    public static void setSeriesList(List<XYChart.Series> seriesList) {
+        FXMLDocumentController.seriesList = seriesList;
+    }
+
+    public static boolean addSeries(XYChart.Series s) {
+        seriesList.add(s);
+        return true;
+    }
+
+    private static XYChart.Series amazonSeries;// = new XYChart.Series();
+    private static XYChart.Series faceBookSeries;// = new XYChart.Series();
+    private static XYChart.Series googleSeries;// = new XYChart.Series();
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
         currentMarketStockPricesArea.textProperty().bind(currentMarketStockPricesTextAreaProp);
+        createChart();
+//        amazonSeries = createSeries("amazon");
+//        addSeriesChart(amazonSeries);
+        addEditStocksTab.setDisable(true);
+        marketGraphTab.setDisable(true);
+        userManagementTab.setDisable(true);
+        viewMarketTab.setDisable(true);
 
+
+       //start();
+
+
+    }
+
+    private void createChart() {
+        final NumberAxis xAxis = new NumberAxis();
+        final NumberAxis yAxis = new NumberAxis();
+        xAxis.setLabel("Time");
+        lineChart =
+                new LineChart<Number, Number>(xAxis, yAxis);
+
+        lineChart.setTitle(new SimpleDateFormat().format(new Date()));
+        lineChart.setPrefHeight(530);
+        lineChart.setPrefWidth(800);
+        chartPane.getChildren().addAll(lineChart);
+
+    }
+
+    private void addSeriesChart(XYChart.Series series) {
+        seriesList.add(series);
+        lineChart.getData().add(series);
+    }
+
+    private XYChart.Series createSeries(String name) {
+        Random random = new Random();
+        XYChart.Series series = new XYChart.Series();
+        series.setName(name);
+        for (int i = 0; i < 20; i++) {
+            series.getData().add(new XYChart.Data(i, 100));
+        }
+        return series;
     }
 
     public void validateLogin(ActionEvent actionEvent) {
         LoginError.setText("");
         if (usernameInput.getText().equals("admin") && passwordInput.getText().equals("admin")) {
             mainTabPane.getSelectionModel().select(viewMarketTab);
+            addEditStocksTab.setDisable(false);
+            marketGraphTab.setDisable(false);
+            userManagementTab.setDisable(false);
+            viewMarketTab.setDisable(false);
         } else {
             LoginError.setText("User Name or Password is Incorrect");
         }
 
     }
 
-    public void deleteUser(ActionEvent actionEvent) {
-    }
+
 
     public void editUsedInfo(ActionEvent actionEvent) {
         String usn = usernameEdit.getText();
@@ -176,8 +259,6 @@ public class FXMLDocumentController extends Thread implements Initializable {
         userInfoTextArea.setText(output + output2 + pfolio + st);
     }
 
-    public void viewUserBalance(ActionEvent actionEvent) {
-    }
 
     public void viewCurrentStocks(ActionEvent actionEvent) {
         Market m = Market.getMarket();
@@ -217,6 +298,7 @@ public class FXMLDocumentController extends Thread implements Initializable {
     public void stopMarket(ActionEvent actionEvent) {
         //currentMarketStockPricesArea.setText("Market Stopped");
         setFXText(currentMarketStockPricesTextAreaProp, "Market Stopped");
+        Market.getMarket().stopMarket();
     }
 
     public void addNewStock(ActionEvent actionEvent) {
@@ -254,5 +336,81 @@ public class FXMLDocumentController extends Thread implements Initializable {
             }
         });
         return true;
+    }
+
+    public void updateChart(ActionEvent actionEvent) {
+        int i = new Random().nextInt(22);
+        try {
+            for (XYChart.Series s : seriesList) {
+                reduceSeriesXValue(s, i);
+            }
+        } catch (NumberFormatException ex) {
+            //System.out.println(ex.toString());
+        }
+    }
+
+    private void updateChart() {
+        updateSeriesList();
+        try {
+            for (XYChart.Series s : seriesList) {
+                double i = new Random().nextInt(22);
+//                double i = getCurrentStockValue(s.getName());
+                reduceSeriesXValue(s, i);
+            }
+        } catch (NumberFormatException ex) {
+            //System.out.println(ex.toString());
+        }
+    }
+
+    private void updateSeriesList() {
+        if (Market.getMarket().getCurrentStockValues().size() != seriesList.size()) {
+            for (String s : Market.getMarket().getCurrentStockValues().keySet()) {
+                if (!isInSeriesList(s)) {
+                    XYChart.Series ser = createSeries(s);
+                    addSeries(ser);
+                }
+            }
+        }
+    }
+
+    private boolean isInSeriesList(String s) {
+        for (XYChart.Series ser : seriesList) {
+            if (s.equals(ser.getName().toLowerCase())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private double getCurrentStockValue(String name) {
+        return Market.getMarket().getCurrentStockValues().get(name);
+    }
+
+    public void reduceSeriesXValue(XYChart.Series series, double newValue) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                lineChart.setTitle("");
+                lineChart.setTitle(new SimpleDateFormat().format(new Date()));
+                lineChart.setPrefHeight(500);
+                series.getData().remove(0);
+                int numOfPoint = series.getData().size();
+                for (int i = 0; i < numOfPoint; i++) {
+                    XYChart.Data<Number, Number> data =
+                            (XYChart.Data<Number, Number>) series.getData().get(i);
+                    int x = (int) data.getXValue();
+                    data.setXValue(x - 1);
+                }
+                series.getData().add(new XYChart.Data(numOfPoint, newValue));
+            }
+        });
+
+    }
+
+    public void logout(ActionEvent actionEvent) {
+        addEditStocksTab.setDisable(true);
+        marketGraphTab.setDisable(true);
+        userManagementTab.setDisable(true);
+        viewMarketTab.setDisable(true);
     }
 }

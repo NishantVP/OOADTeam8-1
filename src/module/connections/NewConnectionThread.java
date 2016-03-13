@@ -108,7 +108,7 @@ public class NewConnectionThread implements Runnable {
 			        
 			        buffer.clear();
 			        sc.read(buffer);
-			        System.out.println("This Buffer" +buffer);
+			        //System.out.println("This Buffer" +buffer);
 	                buffer.flip(); // flip the buffer for reading
 	                byte[] bytes = new byte[buffer.remaining()]; // create a byte array the length of the number of bytes written to the buffer
 	                buffer.get(bytes); // read the bytes that were written
@@ -119,7 +119,7 @@ public class NewConnectionThread implements Runnable {
 	                String Username = authdata[0];
 	                String Password = authdata[1];
 	                
-	                System.out.println("username" +Username);
+//	                /System.out.println("username" +Username);
 	                autoObj = new Authentication(Username,Password);
 	                //autoObj.setUsername();
 	                //autoObj.setPassword();
@@ -130,12 +130,12 @@ public class NewConnectionThread implements Runnable {
 	                		
 			        String PortNumberToSend = Integer.toString(StoCPort);
 			        buffer = ByteBuffer.wrap(PortNumberToSend.getBytes());
-			        System.out.println("current User" +this.currentUser.getAuth().getUsername());
+			        //System.out.println("current User" +this.currentUser.getAuth().getUsername());
 			        new SendThread(StoCPort,market,this.currentUser).start();
 			        new ReceiveThread(CtoSPort,market,this.currentUser).start();
 			        //new ClientThread(StoCPort).start();
 			        
-			        System.out.println("started crossed");
+			        //System.out.println("started crossed");
 			        
 			        CtoSPort = CtoSPort + 2;
 			        StoCPort = StoCPort + 2;

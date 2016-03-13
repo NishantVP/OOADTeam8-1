@@ -264,8 +264,8 @@ public class Market extends Thread {
             BuySell temp1 = i.next();
             while(j.hasNext()) {
                 BuySell temp2 = j.next();
-                System.out.println("In Match: temp1" +temp1.getStockName() +" " +temp1.getQuantity() +" " +temp1.getUnitPrice() +" " +temp1.isBuy());
-                System.out.println("In Match: temp2" +temp2.getStockName() +" " +temp2.getQuantity() +" " +temp2.getUnitPrice() +" " +temp2.isBuy());
+                //System.out.println("In Match: temp1" +temp1.getStockName() +" " +temp1.getQuantity() +" " +temp1.getUnitPrice() +" " +temp1.isBuy());
+                //System.out.println("In Match: temp2" +temp2.getStockName() +" " +temp2.getQuantity() +" " +temp2.getUnitPrice() +" " +temp2.isBuy());
                 if (temp1.getStockName().equals(temp2.getStockName())) {
 
                     if (temp1.getQuantity() == temp2.getQuantity()) {
@@ -286,13 +286,13 @@ public class Market extends Thread {
 
     public boolean addUser(User user) {
         if (allUsersTable.containsValue(user)) {
-            System.out.println("This user already exists");
+            //System.out.println("This user already exists");
             // log the same thing
             return false;
 
         } else {
             allUsersTable.put(user.getAuth().getUsername(), user);
-            System.out.println("in add user: " +user.getName());
+            //System.out.println("in add user: " +user.getName());
         }
         return true;
 
@@ -323,7 +323,7 @@ public class Market extends Thread {
         Portfolio p = new Portfolio(balance,stocks,histories);
         User nu = new User(authentication.getUsername(),"12345678","park central","6692426926",p,authentication);        
         addUser(nu);
-        System.out.println("Added User: " +nu.getAuth().getUsername());
+        //System.out.println("Added User: " +nu.getAuth().getUsername());
         return nu;
     }
 
@@ -342,12 +342,12 @@ public class Market extends Thread {
 //        System.out.println("Is Buy? : "+b.isBuy());
         if(b.isBuy() == true)
         {	
-        	System.out.println("added buy");
+        	//System.out.println("added buy");
             addBuyRequest(b);
         }
         else
         {	
-        	System.out.println("added sell");
+        	//System.out.println("added sell");
             addSellRequest(b);
         }
     }

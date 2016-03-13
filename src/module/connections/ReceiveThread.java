@@ -116,9 +116,9 @@ public class ReceiveThread implements Runnable {
 	private void StartCtoSServerSocket () {
 		try {
 			CtoSServerSocket = new ServerSocket(CtoSPort);
-			System.out.println("Receive Thread: Before Accept");
+			//System.out.println("Receive Thread: Before Accept");
 			//CtoSSocket = CtoSServerSocket.accept();
-			System.out.println("Receive Thread: After Accept");
+			//System.out.println("Receive Thread: After Accept");
 			
 			
 		} catch (IOException e) {
