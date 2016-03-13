@@ -197,8 +197,8 @@ public class FXMLDocumentController extends Thread implements Initializable {
         String usn = usernameEdit.getText();
         String pwd = passwordEdit.getText();
         double balance = Double.parseDouble(balanceEdit.getText());
-        String stkname = stockNameEdit.getText();
-        int stkqty = Integer.parseInt(stockQtyEdit.getText());
+        //String stkname = stockNameEdit.getText();
+        //int stkqty = Integer.parseInt(stockQtyEdit.getText());
 
         Market m = Market.getMarket();
         List<User> userList = m.getUserList();
@@ -220,20 +220,7 @@ public class FXMLDocumentController extends Thread implements Initializable {
         if (balanceEdit.getText().equals("") == false) {
             dispUser.getPortfolio().setMoneyBalance(balance);
         }
-        if (stockNameEdit.getText().equals("") == false) {
-            List<Stock> userStocks = dispUser.getPortfolio().getStocks();
-            Stock temp = null;
-            for (Stock s : userStocks) {
-                if (s.getStockName().equals(stkname)) {
-                    temp = s;
-                    break;
-                }
-            }
-            temp.setStockName(stkname);
-            if (stockQtyEdit.getText().equals("") == false) {
-                temp.setStockQty(stkqty);
-            }
-        }
+        
     }
 
     public void viewUserStocks(ActionEvent actionEvent) {
