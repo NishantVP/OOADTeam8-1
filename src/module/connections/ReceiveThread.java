@@ -100,6 +100,7 @@ public class ReceiveThread implements Runnable {
 					}
 					else {
 						System.out.println("Client Data Received : " +receivedMessage);
+//						System.out.println(market + " rc");
 						market.createBuySell(receivedMessage);
 					}
 				}

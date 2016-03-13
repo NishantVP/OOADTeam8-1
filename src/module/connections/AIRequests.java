@@ -41,7 +41,7 @@ private void AICreatedRequests () {
 	String SampleBuyRequest2 = "google,123,surag,101,110,true";
 	String SampleBuyRequest3 = "facebook,123,surag,101,80,true";
 	String SampleBuyRequest4 = "google,123,surag,101,70,false";
-	String SampleBuyRequest5 = "facebook,123,surag,101,80,false";
+	String SampleBuyRequest5 = "facebook,123,surag,101,70,false";
 	String SampleBuyRequest6 = "amazon,123,surag,101,95,false";
 	String SampleBuyRequest7 = "amazon,123,surag,101,120,true";
 	String SampleBuyRequest8 = "google,123,surag,101,85,true";
@@ -84,16 +84,18 @@ private void AICreatedRequests () {
 public void run() {
 	// TODO Auto-generated method stub
 
-	while(true) {
-		AICreatedRequests();
+//	while(true) {
+		
+//		System.out.println(market + "ai");
 		
 		try {
-			Thread.sleep(5000);
+			Thread.sleep(20000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
+		//AICreatedRequests();
+	//}
 	
 	
 

@@ -48,7 +48,7 @@ public class MarketStart extends Application {
         
         stage.setScene(scene);
         stage.setTitle("Stock Market Admin Control Panel");
-        Market temp = Market.getMarket();
+       Market temp = Market.getMarket();
         temp.addStock("amazon", 100, 0);
         temp.addStock("facebook",100, 0);
         temp.addStock("google",100,0);

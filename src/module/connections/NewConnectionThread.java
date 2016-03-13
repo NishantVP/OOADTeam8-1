@@ -61,8 +61,8 @@ public class NewConnectionThread implements Runnable {
 	public void run() {
 		// TODO Auto-generated method stub
 		System.out.println("New incoming connections Thread Started");
-		String GREETING = "Welcome from Nishant";
-		ByteBuffer buffer = ByteBuffer.wrap(GREETING.getBytes());
+		String GREETING = "Welcome from Nishant Server and I welcome you to my stock market";
+		
 		
 		ServerIP = getFilterIPAddresses();
 		
@@ -88,6 +88,8 @@ public class NewConnectionThread implements Runnable {
 		while(true) {
 			
 			SocketChannel sc;
+			ByteBuffer buffer = ByteBuffer.wrap(GREETING.getBytes());
+			
 			try {
 				sc = serverSocketChannel.accept();
 				
@@ -104,32 +106,33 @@ public class NewConnectionThread implements Runnable {
 			        System.out.println("Incoming connection from: " + sc.socket().getRemoteSocketAddress());
 			        
 			        
-			        
+			        buffer.clear();
 			        sc.read(buffer);
+			        System.out.println("This Buffer" +buffer);
 	                buffer.flip(); // flip the buffer for reading
 	                byte[] bytes = new byte[buffer.remaining()]; // create a byte array the length of the number of bytes written to the buffer
 	                buffer.get(bytes); // read the bytes that were written
 	                String incomintgString = new String(bytes);
 	                System.out.println("String Incoming:" +incomintgString); // How do I know how much to read?
-	                
+	                buffer.clear();
 	                String []  authdata = incomintgString.split(",");
 	                String Username = authdata[0];
 	                String Password = authdata[1];
 	                
 	                System.out.println("username" +Username);
-	                
-	                autoObj.setUsername(Username);
-	                autoObj.setPassword(Password);
+	                autoObj = new Authentication(Username,Password);
+	                //autoObj.setUsername();
+	                //autoObj.setPassword();
 			        
-	                currentUser = market.returnUser(autoObj);
+	                this.currentUser = market.returnUser(autoObj);
 	                
 	                //System.out.println("From user Object " +currentUser.getAuth().getUsername());
 	                		
 			        String PortNumberToSend = Integer.toString(StoCPort);
 			        buffer = ByteBuffer.wrap(PortNumberToSend.getBytes());
-			        System.out.println("current User" +currentUser.getName());
-			        new SendThread(StoCPort,market,currentUser).start();
-			        new ReceiveThread(CtoSPort,market,currentUser).start();
+			        System.out.println("current User" +this.currentUser.getAuth().getUsername());
+			        new SendThread(StoCPort,market,this.currentUser).start();
+			        new ReceiveThread(CtoSPort,market,this.currentUser).start();
 			        //new ClientThread(StoCPort).start();
 			        
 			        System.out.println("started crossed");
@@ -143,6 +146,9 @@ public class NewConnectionThread implements Runnable {
 			        	//System.out.println("Outgoing Buffer " +buffer);
 			        }		    
 			        
+			        buffer.clear();
+			        buffer.compact();
+			        buffer.rewind();
 			        sc.close();
 				}
 			

@@ -23,7 +23,7 @@ public class Market extends Thread {
     private List<Stock> globalStocks = new ArrayList<Stock>();
     private static final List<BuySell> buyRequest = Collections.synchronizedList(new ArrayList<BuySell>());
     private static final List<BuySell> sellRequest = Collections.synchronizedList(new ArrayList<BuySell>());
-    private static final Hashtable<Integer, User> allUsersTable = new Hashtable<>();
+    private static final Hashtable<String, User> allUsersTable = new Hashtable<>();
     //private static final List<User> allUsers = Collections.synchronizedList(new ArrayList<User>());
 
 
@@ -38,21 +38,22 @@ public class Market extends Thread {
         //createStocks(StockType.values());
        // createStockTrendMap();
         //addDummyCurrentValues();
-    	User u1 =  returnUser(new Authentication("surag","surag"));
-    	User u2 =  returnUser(new Authentication("prateek","surag"));
-    	User u3 =  returnUser(new Authentication("nishant","surag"));
-    	addUser(u1);
-    	addUser(u2);
-    	addUser(u3);
+//    	User u1 =  returnUser(new Authentication("surag","surag"));
+//    	User u2 =  returnUser(new Authentication("prateek","surag"));
+//    	User u3 =  returnUser(new Authentication("nishant","surag"));
+//    	addUser(u1);
+//    	addUser(u2);
+//    	addUser(u3);
         start();
     }
 
     @Override
     public void run() {
         while (true) {
+        	//System.out.println("upadte market ---------------------------------------");
             matchOrders();
             updateStockValues();
-//            evaluateCurrentMarketValue();
+
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
@@ -140,7 +141,7 @@ public class Market extends Thread {
     public List<User> getUserList()
     {
     	List<User> l = new ArrayList<>();
-    	for (Integer i : allUsersTable.keySet()) {
+    	for (String i : allUsersTable.keySet()) {
 			l.add(allUsersTable.get(i));
 		}
         return l;
@@ -183,7 +184,7 @@ public class Market extends Thread {
             
             for(BuySell b: buy)
             {
-                if(s.getStockName().equals(b.getStockName()))
+                if(s.getStockName().equals(b.getStockName().toLowerCase()))
                 {
                     if(buyCnt<globalStocks.size())
                     {
@@ -194,7 +195,7 @@ public class Market extends Thread {
             }
             for(BuySell b: sell)
             {
-                if(s.getStockName().equals(b.getStockName()))
+                if(s.getStockName().equals(b.getStockName().toLowerCase()))
                 {
                     if(sellCnt<globalStocks.size())
                     {
@@ -243,7 +244,7 @@ public class Market extends Thread {
     }
 
 
-    private boolean matchOrders() {
+    private synchronized boolean matchOrders() {
         boolean atLeastOneMatch = false;
         Iterator<BuySell> i = buyRequest.iterator();
         Iterator<BuySell> j = sellRequest.iterator();
@@ -251,13 +252,17 @@ public class Market extends Thread {
             BuySell temp1 = i.next();
             while(j.hasNext()) {
                 BuySell temp2 = j.next();
+                System.out.println("In Match: temp1" +temp1.getStockName() +" " +temp1.getQuantity() +" " +temp1.getUnitPrice() +" " +temp1.isBuy());
+                System.out.println("In Match: temp2" +temp2.getStockName() +" " +temp2.getQuantity() +" " +temp2.getUnitPrice() +" " +temp2.isBuy());
                 if (temp1.getStockName().equals(temp2.getStockName())) {
 
                     if (temp1.getQuantity() == temp2.getQuantity()) {
                         System.out.println("found match" + temp1.getStockName());
+           
+                        updatePortfolio(temp1, temp2);
                         i.remove();
                         j.remove();
-//                        updatePortfolio(b, s);
+                       
                         
                         atLeastOneMatch = true;
                     }
@@ -274,25 +279,26 @@ public class Market extends Thread {
             return false;
 
         } else {
-            allUsersTable.put(user.getID(), user);
+            allUsersTable.put(user.getAuth().getUsername(), user);
+            System.out.println("in add user: " +user.getName());
         }
         return true;
 
     }
 
     private void updatePortfolio(BuySell b, BuySell s) {
-        User ub = allUsersTable.get(b.getUserId());
-        ub.getPortfolio().updatePortfolio(b);
+        User ub = allUsersTable.get(b.getUserName());
+       if (ub!=null) ub.getPortfolio().updatePortfolio(b);
 
-        User sb = allUsersTable.get(s.getUserId());
-        sb.getPortfolio().updatePortfolio(s);
+        User sb = allUsersTable.get(s.getUserName());
+        if (sb!=null)  sb.getPortfolio().updatePortfolio(s);
     }
 
 
     public User returnUser(Authentication authentication){
         List<User> users = getUserList();
         for (User u: users) {
-            if(u.getAuth() == authentication){
+            if(u.getAuth().getUsername().equals(authentication.getUsername())){
                 return u;
             }
         }
@@ -303,8 +309,9 @@ public class Market extends Thread {
         stocks.add(new Stock("facebook",100,100));
         List<TransactionHistory> histories = new ArrayList<>();
         Portfolio p = new Portfolio(balance,stocks,histories);
-        User nu = new User(authentication.getUsername(),"12345678","park central","6692426926",p,authentication);
+        User nu = new User(authentication.getUsername(),"12345678","park central","6692426926",p,authentication);        
         addUser(nu);
+        System.out.println("Added User: " +nu.getAuth().getUsername());
         return nu;
     }
 
@@ -322,11 +329,13 @@ public class Market extends Thread {
 //        System.out.println("Quantity: "+b.getQuantity());
 //        System.out.println("Is Buy? : "+b.isBuy());
         if(b.isBuy() == true)
-        {
+        {	
+        	System.out.println("added buy");
             addBuyRequest(b);
         }
         else
-        {
+        {	
+        	System.out.println("added sell");
             addSellRequest(b);
         }
     }
@@ -378,7 +387,7 @@ public class Market extends Thread {
         
         User u = null;
         
-        for(Integer i: allUsersTable.keySet())
+        for(String i: allUsersTable.keySet())
         {
             if(allUsersTable.get(i).getAuth().getUsername().equals(username))
             {

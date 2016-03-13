@@ -71,8 +71,10 @@ public class Portfolio {
         if (order.isBuy()) {
             setMoneyBalance(getMoneyBalance() - (order.getQuantity() * order.getUnitPrice()));
             for (Stock s : stocks) {
-                if (s.getStockName().equals(order.getStockName())) {
+                if (s.getStockName().toLowerCase().equals(order.getStockName().toLowerCase())) {
+                	System.out.println("bought stokcks " + order.getQuantity());
                     s.setStockQty(s.getStockQty() + order.getQuantity());
+                    System.out.println("New stock " + s.getStockQty());
                     getTransactionHistory().add(new TransactionHistory(s.getStockName(), order.getUnitPrice(), order.getQuantity(), true));
                     break;
                 }
@@ -80,8 +82,10 @@ public class Portfolio {
         } else {
             setMoneyBalance(getMoneyBalance() + (order.getQuantity() * order.getUnitPrice()));
             for (Stock s : stocks) {
-                if (s.getStockName().equals(order.getStockName())) {
+                if (s.getStockName().toLowerCase().equals(order.getStockName().toLowerCase())) {
+                	System.out.println("sold stokcks " + order.getQuantity());
                     s.setStockQty(s.getStockQty() - order.getQuantity());
+                    System.out.println("New stock " + s.getStockQty());
                     getTransactionHistory().add(new TransactionHistory(s.getStockName(), order.getUnitPrice(), order.getQuantity(), false));
                     break;
                 }

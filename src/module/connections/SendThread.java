@@ -78,7 +78,7 @@ public class SendThread implements Runnable {
 		
 		while(true) {		
 			//newData = "This is from SendThread..." + sentMessageCounter;
-			newData = market.requestMarketUpdate(currentUser.getName());
+			newData = market.requestMarketUpdate(currentUser.getAuth().getUsername());
 			if(newData.equals(NO_NEW_DATA))  {
 				//System.out.println("No updates for this client at this time ..");
 				try {
