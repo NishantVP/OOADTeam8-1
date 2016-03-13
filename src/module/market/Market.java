@@ -114,7 +114,20 @@ public class Market extends Thread {
         Stock s = new Stock(name, price, qty);
         globalStocks.add(s);
         currentStockValues.put(name,price);
+        propogateStock(s);
         return true;
+    }
+    
+    synchronized public boolean propogateStock(Stock s) {
+        User u = null;
+        for(String i: allUsersTable.keySet())
+        {
+            u = allUsersTable.get(i);
+            Portfolio p = u.getPortfolio();
+            s.setStockQty(100);
+            p.getStocks().add(s);
+        }
+        return false;
     }
 
     public boolean deleteStock(String name) {
@@ -231,7 +244,6 @@ public class Market extends Thread {
             if(update < 0 ) update = 0;
             currentStockValues.put(s.getStockName(), update);
             s.setStockUnitPrice(update);
-            //System.out.println(s.getStockName()+" : "+s.getUnitPrice());
             cnt++;
         }
 
