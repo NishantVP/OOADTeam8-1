@@ -1,19 +1,8 @@
-/**
+package gui; /**
  * COEN 275 OOAD (Winter 2016)
- *  Group Project
- *  Team 8
+ * Group Project
+ * Team 8
  */
-package module.gui;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -24,16 +13,18 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
-import module.market.Market;
-import module.market.Stock;
-import module.users.Authentication;
-import module.users.User;
+import market.Market;
+import market.Stock;
+import users.Authentication;
+import users.User;
+
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Prateek
@@ -44,11 +35,11 @@ public class FXMLDocumentController extends Thread implements Initializable {
     public void run() {
         while (true) {
             try {
-                Thread.sleep(2222);
+                Thread.sleep(5555);
             } catch (InterruptedException ex) {
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             }
-//            System.out.println("updating market");
+            // System.out.println("updating market");
             updateChart();
             updateMarket();
         }
@@ -121,11 +112,6 @@ public class FXMLDocumentController extends Thread implements Initializable {
         FXMLDocumentController.seriesList = seriesList;
     }
 
-    public static boolean addSeries(XYChart.Series s) {
-        seriesList.add(s);
-        return true;
-    }
-
     private static XYChart.Series amazonSeries;// = new XYChart.Series();
     private static XYChart.Series faceBookSeries;// = new XYChart.Series();
     private static XYChart.Series googleSeries;// = new XYChart.Series();
@@ -143,7 +129,7 @@ public class FXMLDocumentController extends Thread implements Initializable {
         viewMarketTab.setDisable(true);
 
 
-       //start();
+        //start();
 
 
     }
@@ -163,16 +149,24 @@ public class FXMLDocumentController extends Thread implements Initializable {
     }
 
     private void addSeriesChart(XYChart.Series series) {
-        seriesList.add(series);
-        lineChart.getData().add(series);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                seriesList.add(series);
+                lineChart.getData().add(series);
+            }
+        });
+
     }
 
     private XYChart.Series createSeries(String name) {
         Random random = new Random();
         XYChart.Series series = new XYChart.Series();
         series.setName(name);
-        for (int i = 0; i < 20; i++) {
-            series.getData().add(new XYChart.Data(i, 100));
+//        int x = (random.nextInt(5)+1) * 20;
+//        System.out.println("x = " + x);
+        for (int i = 0; i < 30; i++) {
+            series.getData().add(new XYChart.Data(i, random.nextInt(30) +100));
         }
         return series;
     }
@@ -190,7 +184,6 @@ public class FXMLDocumentController extends Thread implements Initializable {
         }
 
     }
-
 
 
     public void editUsedInfo(ActionEvent actionEvent) {
@@ -220,7 +213,7 @@ public class FXMLDocumentController extends Thread implements Initializable {
         if (balanceEdit.getText().equals("") == false) {
             dispUser.getPortfolio().setMoneyBalance(balance);
         }
-        
+
     }
 
     public void viewUserStocks(ActionEvent actionEvent) {
@@ -277,7 +270,7 @@ public class FXMLDocumentController extends Thread implements Initializable {
 
     public void startMarket(ActionEvent actionEvent) {
         Market m = Market.getMarket();
-        System.out.println("marketStarted");
+        // System.out.println("marketStarted");
         //updateMarket(new ActionEvent());
 
     }
@@ -340,8 +333,8 @@ public class FXMLDocumentController extends Thread implements Initializable {
         updateSeriesList();
         try {
             for (XYChart.Series s : seriesList) {
-                double i = new Random().nextInt(22);
-//                double i = getCurrentStockValue(s.getName());
+//                double i = new Random().nextInt(22);
+                double i = getCurrentStockValue(s.getName().toLowerCase());
                 reduceSeriesXValue(s, i);
             }
         } catch (NumberFormatException ex) {
@@ -350,11 +343,13 @@ public class FXMLDocumentController extends Thread implements Initializable {
     }
 
     private void updateSeriesList() {
+        // System.out.println("Market size: " + Market.getMarket().getCurrentStockValues().size());
+        // System.out.println("Series size: " + seriesList.size());
         if (Market.getMarket().getCurrentStockValues().size() != seriesList.size()) {
             for (String s : Market.getMarket().getCurrentStockValues().keySet()) {
                 if (!isInSeriesList(s)) {
                     XYChart.Series ser = createSeries(s);
-                    addSeries(ser);
+                    addSeriesChart(ser);
                 }
             }
         }
@@ -382,7 +377,9 @@ public class FXMLDocumentController extends Thread implements Initializable {
                 lineChart.setPrefHeight(500);
                 series.getData().remove(0);
                 int numOfPoint = series.getData().size();
+                // System.out.println("updating series: " + series.getName() + newValue);
                 for (int i = 0; i < numOfPoint; i++) {
+
                     XYChart.Data<Number, Number> data =
                             (XYChart.Data<Number, Number>) series.getData().get(i);
                     int x = (int) data.getXValue();
