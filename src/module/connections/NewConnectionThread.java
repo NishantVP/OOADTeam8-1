@@ -127,7 +127,7 @@ public class NewConnectionThread implements Runnable {
 	                		
 			        String PortNumberToSend = Integer.toString(StoCPort);
 			        buffer = ByteBuffer.wrap(PortNumberToSend.getBytes());
-			        
+			        System.out.println("current User" +currentUser.getName());
 			        new SendThread(StoCPort,market,currentUser).start();
 			        new ReceiveThread(CtoSPort,market,currentUser).start();
 			        //new ClientThread(StoCPort).start();

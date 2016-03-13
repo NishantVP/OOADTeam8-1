@@ -78,7 +78,7 @@ public class SendThread implements Runnable {
 		
 		while(true) {		
 			//newData = "This is from SendThread..." + sentMessageCounter;
-			newData = market.requestMarketUpdate("nishant");
+			newData = market.requestMarketUpdate(currentUser.getName());
 			if(newData.equals(NO_NEW_DATA))  {
 				//System.out.println("No updates for this client at this time ..");
 				try {
@@ -93,7 +93,7 @@ public class SendThread implements Runnable {
 				
 				pWrite.println(newData);             
 				pWrite.flush();
-				System.out.println("Client Data Sent: " +newData);
+				//System.out.println("Client Data Sent: " +newData);
 				sentMessageCounter++;
 				try {
 					Thread.sleep(1000);

@@ -304,7 +304,7 @@ public class Market extends Thread {
         List<TransactionHistory> histories = new ArrayList<>();
         Portfolio p = new Portfolio(balance,stocks,histories);
         User nu = new User(authentication.getUsername(),"12345678","park central","6692426926",p,authentication);
-
+        addUser(nu);
         return nu;
     }
 
@@ -361,12 +361,14 @@ public class Market extends Thread {
     }
     
     
+    
     public String requestMarketUpdate(String username)
     {
         String result ="";
         for(Stock s: globalStocks)
         {
-            result = result.concat(s.getStockName()+","+s.getUnitPrice()+";");
+            String unitPrice = String.format("%.2f",s.getUnitPrice());
+            result = result.concat(s.getStockName()+","+unitPrice+";");
         }
         result = result.concat("#");
         
@@ -403,7 +405,8 @@ public class Market extends Thread {
     public String portfolioToString(Portfolio p)
     {
         String userData ="";
-        userData = userData.concat(p.getMoneyBalance()+",{");
+        String moneyBal = String.format("%.2f",p.getMoneyBalance());
+        userData = userData.concat(moneyBal+",{");
         userData = userData.concat(stockListToString(p.getStocks()));
         userData = userData.concat("}#");
         return userData;
@@ -423,7 +426,6 @@ public class Market extends Thread {
         userData = userData.concat(a.getUsername()+","+a.getPassword()+"#");
         return userData;
     }
-    
     ////////////////////////////////////////////////////////////////////
     ///////////////////////////////ENCODE///////////////////////////////
     public List<Stock> stringToMarket(String data)

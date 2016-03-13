@@ -94,12 +94,12 @@ public class ReceiveThread implements Runnable {
 						e.printStackTrace();
 					}
 				}
-				else {
-					System.out.println("Client Data Received : " +receivedMessage);  
+				else {		
 					if(receivedMessage.equals("NothingNew")){
 						//No New Buy Sell Request from this user
 					}
 					else {
+						System.out.println("Client Data Received : " +receivedMessage);
 						market.createBuySell(receivedMessage);
 					}
 				}
