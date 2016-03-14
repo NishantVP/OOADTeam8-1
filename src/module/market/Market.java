@@ -2,9 +2,9 @@
  *  Group Project
  *  Team 8
  */
-package module.market;
-import module.users.Portfolio;
-import java.io.IOException;
+package market;
+import users.Portfolio;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,8 +13,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import module.users.Authentication;
-import module.users.User;
+import users.Authentication;
+import users.User;
 
 public class Market extends Thread {
 
@@ -274,11 +274,14 @@ public class Market extends Thread {
                         updatePortfolio(temp1, temp2);
                         i.remove();
                         j.remove();
-                       
-                        
                         atLeastOneMatch = true;
+                        break;
                     }
                 }
+            }
+            if(atLeastOneMatch){
+                atLeastOneMatch = false;
+                break;
             }
         }
         return atLeastOneMatch;
