@@ -115,7 +115,7 @@ public class AIRequests implements Runnable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			AICreatedRequests();
+			//AICreatedRequests();
 		}
 
 	}

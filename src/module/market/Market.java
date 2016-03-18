@@ -18,8 +18,7 @@ import module.users.User;
 
 public class Market extends Thread {
 
-
-    private static Market marketInstance = null;
+	private static Market marketInstance = null;
     private List<Stock> globalStocks = new ArrayList<Stock>();
     private static final List<BuySell> buyRequest = Collections.synchronizedList(new ArrayList<BuySell>());
     private static final List<BuySell> sellRequest = Collections.synchronizedList(new ArrayList<BuySell>());
@@ -50,7 +49,7 @@ public class Market extends Thread {
     @Override
     public void run() {
         while (true) {
-        	//System.out.println("upadte market ---------------------------------------");
+        	System.out.println("upadte market ---------------------------------------");
             matchOrders();
             updateStockValues();
 
@@ -274,11 +273,14 @@ public class Market extends Thread {
                         updatePortfolio(temp1, temp2);
                         i.remove();
                         j.remove();
-                       
-                        
                         atLeastOneMatch = true;
+                        break;
                     }
                 }
+            }
+            if(atLeastOneMatch){
+                atLeastOneMatch = false;
+                continue;
             }
         }
         return atLeastOneMatch;
